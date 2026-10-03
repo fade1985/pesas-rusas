@@ -353,12 +353,6 @@ textarea:focus {
   width: 4.5rem;
   text-align: right;
   font-variant-numeric: tabular-nums;
-  -moz-appearance: textfield;
-}
-.weight-input input::-webkit-inner-spin-button,
-.weight-input input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
 }
 .weight-input .unit {
   color: var(--muted);

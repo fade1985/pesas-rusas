@@ -28,11 +28,8 @@ export function WeightInput({ value, onCommit, ariaLabel, className = '' }: Prop
   return (
     <span className={`weight-input ${className}`}>
       <input
-        type="number"
+        type="text"
         inputMode="decimal"
-        min={1}
-        max={MAX_WEIGHT_KG}
-        step="any"
         value={text}
         aria-label={ariaLabel}
         onChange={(e) => setText(e.target.value)}

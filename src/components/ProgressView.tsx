@@ -41,7 +41,7 @@ export function ProgressView({ data }: { data: AppData }) {
           <h3>Mejor tiempo de swings</h3>
           <p>
             <span className="big">{formatTime(stats.bestSwingTimeAtMax.time)}</span>{' '}
-            <span className="muted">con {stats.bestSwingTimeAtMax.weight} kg en todas las series</span>
+            <span className="muted">con ≥ {stats.bestSwingTimeAtMax.weight} kg en todas las series</span>
           </p>
         </section>
       )}

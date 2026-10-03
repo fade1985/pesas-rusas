@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import type { Session } from '../types'
 import { formatTime, summarizeWeights, SWING_REPS_PER_SET, WARMUP, WARMUP_ROUNDS } from '../lib/program'
+import { WeightInput } from './WeightInput'
 
 interface Props {
   session: Session
@@ -50,19 +51,6 @@ function TimeInput({ label, value, onChange }: { label: string; value?: number; 
         }}
       />
     </label>
-  )
-}
-
-function WeightSelect({ value, bells, onChange }: { value: number; bells: number[]; onChange: (v: number) => void }) {
-  const options = bells.includes(value) ? bells : [...bells, value].sort((a, b) => a - b)
-  return (
-    <select value={value} onChange={(e) => onChange(Number(e.target.value))}>
-      {options.map((b) => (
-        <option key={b} value={b}>
-          {b} kg
-        </option>
-      ))}
-    </select>
   )
 }
 
@@ -255,7 +243,7 @@ function WeightEditor({
         {weights.map((w, i) => (
           <label key={i} className="weight-item">
             <span>{labelFor(i)}</span>
-            <WeightSelect value={w} bells={bells} onChange={(v) => onSet(i, v)} />
+            <WeightInput value={w} ariaLabel={labelFor(i)} onCommit={(v) => onSet(i, v)} />
           </label>
         ))}
       </div>

@@ -16,6 +16,7 @@ import { pauseTimer, STOPPED_TIMER, timerElapsedMs } from '../lib/storage'
 import { useWakeLock } from '../hooks/useAppData'
 import { SessionForm } from './SessionForm'
 import { Timer } from './Timer'
+import { WeightGroupsInput } from './WeightInput'
 
 interface Props {
   data: AppData
@@ -36,6 +37,11 @@ export function TrainView({ data, update, onLogPast }: Props) {
   }, [data.sessions, settings])
 
   const [message, setMessage] = useState<string | null>(null)
+  const [plan, setPlan] = useState<{ swings: number[]; getups: number[] } | null>(null)
+  const planned = plan ?? { swings: suggestion.swings, getups: suggestion.getups }
+  const edited =
+    plan !== null &&
+    (plan.swings.join() !== suggestion.swings.join() || plan.getups.join() !== suggestion.getups.join())
 
   const running = !!draft && (draft.swingTimer.runningSince !== null || draft.getupTimer.runningSince !== null)
   useWakeLock(running)
@@ -44,10 +50,11 @@ export function TrainView({ data, update, onLogPast }: Props) {
 
   const start = () => {
     setMessage(null)
+    setPlan(null)
     update((d) => ({
       ...d,
       draft: {
-        session: createSession(suggestion.swings, suggestion.getups),
+        session: createSession(planned.swings, planned.getups),
         swingTimer: STOPPED_TIMER,
         getupTimer: STOPPED_TIMER,
       },
@@ -102,14 +109,31 @@ export function TrainView({ data, update, onLogPast }: Props) {
           <div className="hero-grid">
             <div>
               <div className="muted small">100 swings</div>
-              <div className="big">{summarizeWeights(suggestion.swings)}</div>
+              <WeightGroupsInput
+                label="Swings"
+                weights={planned.swings}
+                onChange={(swings) => setPlan({ ...planned, swings })}
+              />
             </div>
             <div>
               <div className="muted small">10 get-ups</div>
-              <div className="big">{summarizeWeights(suggestion.getups)}</div>
+              <WeightGroupsInput
+                label="Get-ups"
+                weights={planned.getups}
+                onChange={(getups) => setPlan({ ...planned, getups })}
+              />
             </div>
           </div>
           <p className="muted">{suggestion.message}</p>
+          {edited && (
+            <p className="small">
+              Peso modificado (sugerido: swings {summarizeWeights(suggestion.swings)}, get-ups{' '}
+              {summarizeWeights(suggestion.getups)}).{' '}
+              <button className="link inline" onClick={() => setPlan(null)}>
+                Volver a la sugerencia
+              </button>
+            </p>
+          )}
           <button className="btn primary block" onClick={start}>
             Empezar entrenamiento
           </button>
